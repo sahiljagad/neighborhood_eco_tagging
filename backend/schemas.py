@@ -2,13 +2,6 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 
-class SightingCreate(BaseModel):
-    filename: str
-    species: Optional[str] = None
-    latitude: float
-    longitude: float
-
-
 class Sighting(BaseModel):
     filename: str
     species: Optional[str] = None
@@ -17,4 +10,4 @@ class Sighting(BaseModel):
     timestamp: datetime
 
     class Config: 
-        orm_mode = True
+       from_attributes = True
