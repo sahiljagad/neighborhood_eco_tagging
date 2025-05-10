@@ -5,6 +5,7 @@ import shutil
 from .models import Sighting
 from .schemas import Sighting as SightingSchema
 from .database import get_db
+from .model import predict_image
 import os
 
 router = APIRouter()
@@ -26,7 +27,8 @@ async def upload_animal_sighting(
         shutil.copyfileobj(file.file, f)
 
     timestamp = datetime.now()
-    animal_type = "Deer"  # Placeholder, replace with AI model
+    animal_type = predict_image(file_location)
+    print(f"Predicted animal type: {animal_type}")
 
     sighting = Sighting(
         filename=file.filename,

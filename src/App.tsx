@@ -6,15 +6,14 @@ import { type Sighting } from './types';
 
 function App() {
 
-  const [markerLocations, setMarkerLocations] = useState<[number, number][]>([]);
+  const [sightings, setSightings] = useState<Sighting[]>([]);
 
   useEffect(() => {
     // Fetch sightings from the backend
     fetch('http://localhost:8000/sightings/')
       .then(res => res.json())
-      .then(data => {
-        const locations: [number, number][] = data.map((sighting: Sighting) => [sighting.latitude, sighting.longitude]);
-        setMarkerLocations(locations);
+      .then((data: Sighting[]) => {
+        setSightings(data);
         console.log('Fetched sightings:', data);
       })
       .catch(err => console.error('Error fetching sightings:', err));
@@ -43,7 +42,7 @@ function App() {
       })
       .then((data) => {
         console.log('Upload successful:', data);
-        setMarkerLocations([...markerLocations, location]);
+        setSightings([...sightings, data]);
       })
       .catch((err) => {
         console.error('Error uploading image:', err);
@@ -53,7 +52,7 @@ function App() {
   return (
     <div>
       <UploadButton onImageUpload={handleImageUpload}/>
-      <MapView markerLocations={markerLocations}/>
+      <MapView sightings={sightings}/>
     </div>
   );
 }

@@ -13,9 +13,7 @@ export default function UploadButton({onImageUpload}: UploadButtonProps) {
       navigator.geolocation.getCurrentPosition(position => {
         const { latitude, longitude } = position.coords;
         if (latitude && longitude) {
-          alert(`Image location set to: ${latitude}, ${longitude}`);
           onImageUpload(file, [latitude, longitude]);
-          // add image + location to some DB
         } else {
           alert('No GPS data found in this image.');
         }
