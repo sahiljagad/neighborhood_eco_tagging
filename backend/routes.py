@@ -28,7 +28,6 @@ async def upload_animal_sighting(
 
     timestamp = datetime.now()
     animal_type = predict_image(file_location)
-    print(f"Predicted animal type: {animal_type}")
 
     sighting = Sighting(
         filename=file.filename,

@@ -25,3 +25,5 @@ dist-ssr
 venv
 .env
 *.cpython-*.pyc
+dataset
+__pycache__

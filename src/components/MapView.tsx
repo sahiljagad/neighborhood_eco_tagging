@@ -1,10 +1,21 @@
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import './MapView.css';
 import type { Sighting } from '../types';
+import type { LatLngExpression } from 'leaflet';
 
 interface MapViewProps {
     sightings: Sighting[];
 }
+
+const JITTER_RADIUS = 0.0001; // This defines how far the jitter can go from the original point
+
+const applyJitter = (latitude: number, longitude: number) => {
+    // Apply random jitter to latitude and longitude
+    const jitterLat = latitude + (Math.random() - 0.5) * 2 * JITTER_RADIUS;
+    const jitterLon = longitude + (Math.random() - 0.5) * 2 * JITTER_RADIUS;
+
+    return [jitterLat, jitterLon];
+};
 
 export default function MapView({sightings}: MapViewProps) {
     return (
@@ -17,7 +28,7 @@ export default function MapView({sightings}: MapViewProps) {
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 { 
                     sightings.map((sighting, index) => 
-                        <Marker key={index} position={[sighting.latitude, sighting.longitude]} >
+                        <Marker key={index} position={applyJitter(sighting.latitude, sighting.longitude) as LatLngExpression} >
                             <Popup>
                                 <div className='popup-content'>
                                     <h3>{sighting.species}</h3>
