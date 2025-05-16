@@ -27,3 +27,6 @@ venv
 *.cpython-*.pyc
 dataset
 __pycache__
+dataset.zip
+best_model.pth
+.venv

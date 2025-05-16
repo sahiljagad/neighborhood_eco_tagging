@@ -11,9 +11,8 @@ import os
 router = APIRouter()
 
 @router.post("/upload/", response_model=SightingSchema)
-#why do we need to use async here and what is the asyc def do here?
 async def upload_animal_sighting(
-    file: UploadFile = File(...), # what does the ... mean?
+    file: UploadFile = File(...), # requires a file upload
     latitude: float = 0.0, 
     longitude: float = 0.0, 
     db: Session = Depends(get_db)
@@ -28,10 +27,11 @@ async def upload_animal_sighting(
 
     timestamp = datetime.now()
     animal_type = predict_image(file_location)
+  
 
     sighting = Sighting(
         filename=file.filename,
-        species=animal_type,
+        species= "".join([x[0].upper() + x[1:]  + " " for x in animal_type.split("_")]), # remove underscores and capitalize
         latitude=latitude,
         longitude=longitude,
         timestamp=timestamp
@@ -39,7 +39,7 @@ async def upload_animal_sighting(
 
     db.add(sighting)
     db.commit()
-    db.refresh(sighting) # why do we need to refresh the sighting?
+    db.refresh(sighting) # syncs the database with the current state of the object
 
     return sighting
 

@@ -66,9 +66,9 @@ def download_images_for_taxon(taxon_id, common_name, max_images=30, out_dir="dat
             for i, photo in enumerate(obs.get("photos", [])):
                 img_url = photo.get("url")
                 if img_url:
-                    img_url = img_url.replace("square", f"{common_name}_{i + images_added_this_page}")
+                    img_url = img_url.replace("square", "medium")
                     img_name = os.path.basename(urlparse(img_url).path)
-                    img_path = f"{out_dir}/{common_name}/{img_name}"
+                    img_path = f"{out_dir}/{common_name}/{i + images_added_this_page}_{img_name}"
 
                     if not os.path.exists(img_path):
                         try:

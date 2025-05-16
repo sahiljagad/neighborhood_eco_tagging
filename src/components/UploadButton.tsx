@@ -1,33 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface UploadButtonProps {
   onImageUpload: (file: File, location: [number, number] | null) => void;
 }
-export default function UploadButton({onImageUpload}: UploadButtonProps) {
+
+export default function UploadButton({ onImageUpload }: UploadButtonProps) {
+  const [hover, setHover] = useState(false);
+
+  const baseStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 1000,
+    borderRadius: 4,
+    padding: '10px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+    cursor: 'pointer',
+    userSelect: 'none',
+  };
+  
+  const defaultStyle: React.CSSProperties = {
+    ...baseStyle,
+    backgroundColor: '#f0f0f0',
+    color: '#000',
+  };
+  
+  const hoverStyle: React.CSSProperties = {
+    ...baseStyle,
+    backgroundColor: '#636363',
+    color: '#fff',
+  };
+  
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    try {
-      navigator.geolocation.getCurrentPosition(position => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
         const { latitude, longitude } = position.coords;
-        if (latitude && longitude) {
-          onImageUpload(file, [latitude, longitude]);
-        } else {
-          alert('No GPS data found in this image.');
-        }
-      });
-    } catch (error) {
-      console.error('EXIF parsing failed:', error);
-    }
+        onImageUpload(file, [latitude, longitude]);
+      },
+      error => {
+        alert('Failed to get location: ' + error.message);
+        onImageUpload(file, null); // fallback if location fails
+      }
+    );
   }
 
   return (
-    <div style={{ position: 'absolute', top: 20, right: 20, zIndex: 1000 }}>
-      <label style={{ background: '#fff', padding: '8px 12px', borderRadius: 4, cursor: 'pointer' }}>
-        Upload Image
-        <input type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }}/>
+    <div
+      style={hover ? hoverStyle : defaultStyle}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <label>
+        Upload
+        <input type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
       </label>
     </div>
   );

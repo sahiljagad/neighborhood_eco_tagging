@@ -20,12 +20,16 @@ const applyJitter = (latitude: number, longitude: number) => {
 export default function MapView({sightings}: MapViewProps) {
     return (
         <div className='map-container'>
-            <MapContainer center={[37.572676, -121.999605]} zoom={15} scrollWheelZoom
+            <MapContainer center={[37.572676, -121.999605]} zoom={15} maxZoom={25} // allow deep zoomscrollWheelZoom
                 style={{ height: '70vh', width: '80vw',
                     borderRadius: '10px', 
                     boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
                 }}>
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <TileLayer 
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    minZoom={3}
+                    maxZoom={25}
+                />
                 { 
                     sightings.map((sighting, index) => 
                         <Marker key={index} position={applyJitter(sighting.latitude, sighting.longitude) as LatLngExpression} >
